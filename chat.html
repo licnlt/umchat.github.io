@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <style type="text/css">
+    	h4{
+    		color:red;
+    	}
+    
+    	#sset{
+    		margin-left: 0;
+    	}
+    	#myming{
+			margin-left: 5px;
+			color: #e60000;
+			font-weight: bold;
+    	}
+    	#myneirong{
+
+    	}
+    	#heming{
+			margin-right: 5px;
+			color: #4c0099;
+			font-weight: bold;
+    	}
+    	#heneirong{
+			
+    	}
+    	.ffoot{
+    		width: 100%;
+			background: white;
+    		position: fixed;
+			bottom: 0;
+			padding-bottom: 0;
+			margin-bottom: 0;
+    	}
+
+    	#wai{
+    		
+    	}
+    	#text1{
+    		height: 450px;
+    		margin-bottom: 20px;
+    		overflow: auto;
+    	}
+    </style>
+    <title>正在聊天室中。。。</title>
+    <script src="https://cdn.wilddog.com/sdk/js/2.2.0/wilddog-sync.js"></script>
+	<script src="https://cdn.wilddog.com/sdk/js/current/wilddog.js"></script>
+
+</head>
+<body>
+<!-- 标题 -->
+	<div id="TiT"></div>
+<!-- 聊天 -->
+	
+	<div>
+		<div id="text1"></div>
+	</div>
+
+	
+
+<!-- 发送框 -->
+<div class="form-group ffoot">
+	<div class="col-sm-8 col-xs-8 col-md-8">
+		<input type="text" id="text" class="form-control" placeholder="在此说话。。。。">
+	</div>
+	<label class="control-label col-sm-2 col-xs-2 col-md-2">
+		<input type="button" value="发送" id="sset" class=" btn btn-sm btn-primary"/>
+	</label>
+	<label class="control-label col-md-2 col-sm-2 col-xs-2">
+		<input type="button" value="退出" id="bbb" name="" class=" btn btn-danger btn-sm btn-primary">
+	</label>
+</div>
+	
+	
+</body>
+<script>
+//标题
+var biaoti=document.createElement('h4');
+var rongqi=document.getElementById("TiT");
+biaoti.innerHTML="您正在<span style='color:blue'>"+localStorage.roomid+"</span>房间,您的名字是<span style='color:blue'>"+localStorage.nickname+"</span>";
+rongqi.appendChild(biaoti);
+
+// 返回住界面,删除数据
+var bbt=document.getElementById("bbb");
+bbt.onclick=function(){
+	ref.remove();
+	self.location='index.html';
+}
+
+
+var Name=localStorage.nickname;
+var Content=document.getElementById("text");
+var bt1=document.getElementById("sset");
+//显示屏
+var T1=document.getElementById("text1");
+//
+	var config = {
+	  syncURL: "https://umchat.wilddogio.com" 
+	};
+	wilddog.initializeApp(config);
+	var ref = wilddog.sync().ref();
+//
+var oContent=Content.value;
+
+//发送
+bt1.onclick=function(){
+
+var oContent=Content.value;
+	ref.push({
+		"username":Name,
+		"content" : oContent
+	});
+Content.value="";
+}
+
+//监听获取数据
+ref.on("child_added",function(datasnapshot){
+	if(datasnapshot.val().username==Name){
+		T1.innerHTML+="<span style='float:right' id='myming'>"+getInsertHTML(datasnapshot.val().username)+"</span>"
+	+"<span style='float:right' id='myneirong'>"+getInsertHTML(datasnapshot.val().content)+"</span><br/>";
+	}else{
+		T1.innerHTML+="<span style='' id='heming'>"+getInsertHTML(datasnapshot.val().username)+"</span>"
+	+"<span style='' id='heneirong'>"+getInsertHTML(datasnapshot.val().content)+"</span><br/>";
+	}
+	
+});
+function getInsertHTML(aa){
+	var string=aa;
+	return string
+}
+</script>
+</html>
